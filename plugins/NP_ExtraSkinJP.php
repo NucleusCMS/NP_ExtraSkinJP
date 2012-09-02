@@ -35,7 +35,7 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 	function getName() 		{ return 'ExtraSkinJP'; }
 	function getAuthor()  	{ return 'Radek HULAN + Taka + Nucleus(JP) team'; }
 	function getURL()  		{ return 'http://japan.nucleuscms.org/wiki/plugins:extraskinjp'; }
-	function getVersion() 	{ return '0.4.7'; }
+	function getVersion() 	{ return '0.4.8.b1'; }
 	function getDescription() { return ''._LANG_NP_EXTRASKINJP10.'';	}
 
 	function supportsFeature($what) {
