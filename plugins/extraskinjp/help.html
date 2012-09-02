@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Nucleusプラグイン管理用ヘルプ</title>
+	<style type="text/css">
+	<!--
+		body {
+			font-family: verdana, arial;
+			font-size: small;
+		}
+
+		h1 {
+			font-size: large;
+			border-bottom: 1px gray dashed;
+			color: #596d9d;
+			text-align: left;
+		}
+
+		h2 {
+			font-size: medium;
+			border: 1px solid #ddd;
+			background-color: whitesmoke;
+			text-align: left;
+		}
+
+		.page {
+			height: 800px;
+			text-align: justify;
+			margin-bottom: 100px;
+		}
+
+		pre {
+			background-color: #ddd;
+			padding: 5px;
+			font-size: small;
+		}
+
+		.example {
+			background-color: #ddd;
+			padding: 5px;
+		}
+
+		ul.templates {
+			font-size: x-small;
+			line-height: 1.1;
+			list-style: none;
+			text-indent: -20px;
+			margin-left: 20px;
+		}
+
+		ul {
+			text-align: left;
+		}
+
+		a:link, a:visited {
+			color: #1D3565;
+			font-weight: bold;
+			text-decoration: underline;
+		}
+
+		a:hover {
+			background-color: whitesmoke;
+		}
+
+		.deprecated {
+			border: 3px solid red;
+			padding: 5px;
+			font-size: medium;
+		}
+
+		tt, code {
+			font-size: small;
+		}
+
+		table {
+			border: 1px solid #ccc;
+		}
+
+		th {
+			background-color: #eee;
+		}
+
+		td {
+			vertical-align: top;
+		}
+
+		.note {
+			background-color: #eee;
+			padding: 5px;
+		}
+		
+		.var {
+		    white-space:nowrap;
+		}
+	-->
+	</style>
+</head>
+<body>
+
+<div class="page">
+<h1>Nucleusプラグインポップアップ・ヘルプ</h1>
+</div>
+
+
+<div class="page">
+<a name="name"></a>
+<h1>ページスキン・部品の名前</h1>
+
+<p>名前は半角英数(a-z, A-Z, 0-9)かつスペースを含まないものを付けてください。<br />
+ページスキン、部品の全てを含め、重複する名前を付けることはできません。<br />
+なお、ページスキンの場合、この名前とは別に<a href="#url">URL</a>を設定することができます。</p>
+</div>
+
+
+
+<div class="page">
+<a name="url"></a>
+<h1>ページのURL</h1>
+
+<p>ページスキン名とは別にURLを設定することができます。
+例えばURL欄に「contact」と記入した場合、FancyURLであれば「your.com/extra/contact」、通常モードであれば「your.com/extra.php?contact」でこのスキンを適用したページにアクセスすることができます(「extra」の部分は各自の設定により変わります)</p>
+<p>URLに使用できる文字はスペース、スラッシュ、 ? 、&amp;、 =  以外の半角英数記号のみです（設定時にチェックはしませんので気をつけて下さい）。ページスキン作成直後はスキン名と同じになっています。</p>
+</div>
+
+<div class="page">
+<a name="skinvartype"></a>
+<h1>変数を使用するスキンタイプ</h1>
+
+<p>作成したページスキンでNucleusのスキン変数を使用する場合、どのスキンタイプの変数を使用するか選択してください。デフォルトはメインの目次(Index)スキンです。</p>
+<p>なお、もしここで「月別アーカイブページ」「個別アイテムページ」「メンバー詳細ページ」「画像ポップアップウィンドウ」を選択した場合、URLリクエスト中に以下の値が存在しなかった時、値が正しくなかった時はエラー表示されます。</p>
+<ul>
+<li>月別アーカイブページ ・・・ <var>archive</var></li>
+<li>個別アイテムページ ・・・ <var>itemid</var></li>
+<li>メンバー詳細ページ ・・・ <var>memberid</var></li>
+<li>画像ポップアップウィンドウ ・・・ <var>imagepopup</var></li>
+</ul>
+<p class="note">ここで決めたスキンタイプ以外に属する変数を使うことはできません。例えば「メインの目次」を選択した場合に「月別アーカイブページ」と「月別アーカイブ一覧ページ」でのみ利用可能な変数、<var>&lt;%archivedate%&gt;</var>を使うことはできません。</p>
+<p>またスキン中に利用するプラグインによっては「<a href="#skintype">実際のスキンタイプ</a>」を適切に設定する必要があります。</p>
+</div>
+
+<div class="page">
+<a name="skintype"></a>
+<h1>実際のスキンタイプ</h1>
+
+<p><var>&lt;%if(skintype)%&gt;</var>を使うなど、Nucleusに既存のスキンタイプとは別のタイプとしてこのページスキンを扱って欲しい場合は「pageparser」を選んでください。この場合<var>&lt;%if(skintype,pageparser)%&gt;</var>と書けば振り分けできます。</p>
+<p>逆にShowBlogsなどスキンタイプによって処理を振り分けるプラグインを使う場合は「変数使用のタイプと同一」を選んでください。例えば「変数を使用するスキンタイプ」で「メインの目次」を選択していた場合、このページスキンも完全に「メインの目次」スキンタイプになりすまします。こちらは新しくNucleusのスキンを作ってURLに「?skinid=8」（8は任意の数字）を付けてアクセスした場合と同じことになります。</p>
+<p>デフォルトは「pageparser」です。</p>
+</div>
+
+<div class="page">
+<a name="filter"></a>
+<h1>blogフィルター</h1>
+
+<p>作成したスキンでNucleusのblogやアイテム等を表示する場合、そのままではURLパラメーターによってどのblogのデータも表示可能になっています。特定のblogのデータだけをこのスキンで表示させるようにしたい場合、この欄に該当blogIDを記述します。複数ある場合はスラッシュで区切って記入して下さい。</p>
+<p>逆に特定のblogのデータを「表示しない」ようにする場合は、記述の先頭に「&lt;&gt;」をつけて記入して下さい。</p>
+<p>表示させたくないblogのデータにアクセスされた場合は<samp>'No such page exists.'</samp>等のエラー表示をします（この時はおそらくグローバル設定で「基本のスキン」に設定したスキンが使われます）。</p>
+<dl class="note">
+<dt><code>2/3</code></dt>
+<dd>blogIDが2と3のblogだけを表示可能にします。</dd>
+<dt><code>&lt;&gt;5</code></dt>
+<dd>blogIDが5のblogを表示しません（それ以外は表示できます）。</dd>
+<dt><code>&lt;&gt;4/5</code></dt>
+<dd>blogIDが4と5のblogを表示しません（それ以外は表示できます）。</dd>
+</dl>
+</div>
+
+<div class="page">
+<a name="fieldtype"></a>
+<h1>部品タイプ</h1>
+
+<dl>
+	<dt>グローバル</dt>
+	<dd><p>単純に外部ファイルの代わりとして使いたいのであれば、この「グローバル」を選んでください。(ExtraSkinJP0.24以前までの「部品」はこのグローバルタイプに該当します)</p></dd>
+	<dt>blog</dt>
+	<dd><p>「blog」タイプの部品はその中に各ブログ毎の専用フィールドを持ちます。このタイプの部品が呼び出された場合、持っているフィールドの中から現在表示しているブログのデータを自動的に選んで表示します。（スキンパラメーターで任意のフィールドデータを表示させることも可能です。なおphpとして呼び出すことはできません。）</p></dd>
+	<dt>blogとcategory</dt>
+	<dd><p>「blogとcategory」タイプの部品は上記に加え、各カテゴリー毎のフィールドも持つことができます。こちらの場合、カテゴリーが選択されていればそのカテゴリーのフィールドデータ、選択されていなければ現在のブログのフィールドデータが表示されるようになります。（スキンパラメーターで任意のフィールドデータを表示させることも可能です。なおphpとして呼び出すことはできません。）</p></dd>
+</dl>
+<p>「blog」・「blogとcategory」タイプの部品は後でどちらかのタイプに変更することができますが、「グローバル」タイプの部品は変更することはできません。</p>
+</div>
+
+<div class="page">
+<a name="parser-properties"></a>
+<h1>パーサーのプロパティ</h1>
+
+<table>
+<caption>パーサーのプロパティ</caption>
+<tbody>
+<tr><th>オプション名</th><th>値</th></tr>
+<tr>
+<td>Includeモード</td>
+<td>
+<ul>
+<p>デフォルトは「自動設定」になっています。Nucleusにおける設定とは別に指定したい場合は「ノーマル」か「skindirを使う」を選択してください。</p>
+<li><strong>自動設定</strong>：URLにブログIDが付加されている場合はそのブログの「標準スキン」のIncludeモード設定、されていない場合は一般設定での「基本のスキン」のIncludeモード設定がそれぞれ自動的に適用されます。</li>
+<li><strong>ノーマル</strong>：ページを作成する.phpファイルのディレクトリ/urlから相対位置のファイルを取り出しインクルードします。 
+<li><strong>skindirを使う</strong>：スキンディレクトリ/スキンurlから相対位置のファイルを取り出しインクルードします。 </li></ul>
+</td></tr>
+<tr>
+<td>includeプリフィックス</td>
+<td>
+<p>Includeモードを「ノーマル」か「skindirを使う」にした場合、この設定が有効になります。</p>
+<p>このプロパティはインクルードするファイルそれぞれの頭に追加されるプリフィックスです。例えば、プリフィックスが<tt>base/</tt>でインクルードするファイルが<tt>somefile.txt</tt>なら、最終的には<tt>base/somefile.txt</tt>をインクルードすることになります。<br />
+<tt>includemode</tt>を<tt>skindirを使う</tt>に<tt>IncludePrefix</tt>を<tt>somename/</tt>に設定した場合は<tt>skindir/somename/somefile.txt</tt>をインクルードすることになります。</p>
+</td>
+</tr></table>
+
+</div>
+
+
+
+
+</body>
+</html>
