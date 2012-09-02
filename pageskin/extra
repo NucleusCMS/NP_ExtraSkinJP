@@ -1,0 +1,27 @@
+<?php
+include('./fancyurls.config.php');
+include('./config.php');
+
+ParsePlugExtraSkin();
+  
+function ParsePlugExtraSkin() {
+	global $CONF, $manager, $member;
+
+	// under v3.2 needs this
+	if ($CONF['DisableSite'] && !$member->isAdmin()) {
+		header('Location: ' . $CONF['DisableSiteURL']);
+		exit;
+	}
+
+  $temp = explode("/",serverVar('PATH_INFO'));
+	array_shift ($temp);
+	
+	if (isset($temp[1]) && preg_match("/^([1-9]+[0-9]*)(\?.*)?$/", $temp[1], $matches)) {
+		$temp[1] = $matches[1];
+	}
+	
+	$plugin =& $manager->getPlugin('NP_ExtraSkinJP');
+	$plugin->extra_selector($temp);
+
+}
+?>
