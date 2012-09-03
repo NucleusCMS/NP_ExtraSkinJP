@@ -594,7 +594,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 		$body = quickQuery("SELECT body as result FROM ". $this->data_table. " WHERE context='blog' and refid=$refid and tableid=$tableid");
 		
 		$extrahead = '<script type="text/javascript" src="'.$CONF['AdminURL'].'javascript/templateEdit.js"></script>';
-		$extrahead .= '<script type="text/javascript">setTemplateEditText("'.mysql_real_escape_string(_EDITTEMPLATE_EMPTY).'");</script>'."\n";
+		$extrahead .= '<script type="text/javascript">setTemplateEditText("'.addslashes(_EDITTEMPLATE_EMPTY).'");</script>'."\n";
 		$oPluginAdmin->start($extrahead);
 
 ?>
@@ -725,7 +725,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 		}
 
 		$extrahead = '<script type="text/javascript" src="'.$CONF['AdminURL'].'javascript/templateEdit.js"></script>';
-		$extrahead .= '<script type="text/javascript">setTemplateEditText("'.mysql_real_escape_string(_EDITTEMPLATE_EMPTY).'");</script>'."\n";
+		$extrahead .= '<script type="text/javascript">setTemplateEditText("'.addslashes(_EDITTEMPLATE_EMPTY).'");</script>'."\n";
 		$oPluginAdmin->start($extrahead);
 
 ?>
