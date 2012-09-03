@@ -553,7 +553,7 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 					$skinid = $CONF['BaseSkin'];
 				}
 				if (SKIN::existsID($skinid)) {
-					$skin =& new SKIN($skinid);
+					$skin = new SKIN($skinid);
 					// set IncludeMode properties of parser
 					PARSER::setProperty('IncludeMode',$skin->getIncludeMode());
 					PARSER::setProperty('IncludePrefix',$skin->getIncludePrefix());
@@ -595,8 +595,8 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 		if (!isset($skin)) $skin = new SKIN($CONF['BaseSkin']);
 		$manager->notify('PreSkinParse',array('skin' => &$skin, 'type' => $skinType));
 
-		$handler =& new ACTIONS($skinType);
-		$parser =& new PARSER(SKIN::getAllowedActionsForType($o->skinvartype), $handler);
+		$handler = new ACTIONS($skinType);
+		$parser = new PARSER(SKIN::getAllowedActionsForType($o->skinvartype), $handler);
 		$handler->setParser($parser);
 		$parser->parse($o->skin); 
 
