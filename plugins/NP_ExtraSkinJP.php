@@ -47,6 +47,10 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 	}
 
 	function install() {
+	
+		$tbl_plug_extraskin_jp      = sql_table('plug_extraskin_jp');
+		$tbl_plug_extraskin_jp_data = sql_table('plug_extraskin_jp_data');
+		
 		$this->createOption('scols', _LANG_NP_EXTRASKINJP01, 'text', '80');
 		$this->createOption('srows', _LANG_NP_EXTRASKINJP02, 'text', '20');
 		$this->createOption('pcols', _LANG_NP_EXTRASKINJP03, 'text', '80');
@@ -56,7 +60,7 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 		$this->createOption('bclist', _LANG_NP_EXTRASKINJP07, 'yesno', 'yes');
 		$this->createOption('quickmenu', _LANG_NP_EXTRASKINJP08, 'yesno', 'yes');
 		$this->createOption('del_uninstall', _LANG_NP_EXTRASKINJP09, 'yesno', 'no');
-		sql_query('CREATE TABLE IF NOT EXISTS '.sql_table('plug_extraskin_jp').' ( '.
+		sql_query("CREATE TABLE IF NOT EXISTS {$tbl_plug_extraskin_jp} ( ".
               'tableid int(11) auto_increment, '.
               'title varchar(200) not null, '.
               'description varchar(200) not null, '.
@@ -72,15 +76,15 @@ class NP_ExtraSkinJP extends NucleusPlugin {
               'UNIQUE titleindx (title), '.
               'KEY urlindx (url) '.
               ') ENGINE=MyISAM');
-		sql_query('CREATE TABLE IF NOT EXISTS '.sql_table('plug_extraskin_jp_data').' (
+		sql_query("CREATE TABLE IF NOT EXISTS {$tbl_plug_extraskin_jp_data} (
 			tableid int(11) not null,
 			context varchar (10) not null,
 			refid int (11) not null,
 			body text not null,
 			PRIMARY KEY (tableid,context,refid)
-		) ENGINE=MyISAM');
+		) ENGINE=MyISAM");
 		
-		$check_column = sql_query('SELECT * FROM '. sql_table('plug_extraskin_jp'));
+		$check_column = sql_query("SELECT * FROM {$tbl_plug_extraskin_jp}");
 		for ($i=0; $i<mysql_num_fields($check_column); $i++) {
 			if ($meta = mysql_fetch_field($check_column)) {
 				$names[] = $meta->name;
@@ -89,26 +93,27 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 		if (in_array("skin",$names)) {
 			while ($o = mysql_fetch_object($check_column)) {
 				$context = ($o->pageflg) ? "skin" : "global";
-				$query = "INSERT INTO ". sql_table('plug_extraskin_jp_data') . '(tableid, context, refid, body) VALUES ('.$o->tableid.', "'.$context.'", 0, "'.mysql_real_escape_string($o->skin).'")';
+				$skin = mysql_real_escape_string($o->skin);
+				$query = "INSERT INTO {$tbl_plug_extraskin_jp_data} (tableid, context, refid, body) VALUES ('{$o->tableid}', '{$context}', 0, '{$skin}')";
 				sql_query($query);
 			}
-			sql_query ('ALTER TABLE '.sql_table('plug_extraskin_jp').' DROP skin');
-			sql_query ('ALTER TABLE '.sql_table('plug_extraskin_jp').' CHANGE pageflg fieldtype varchar (10) not null');
-			sql_query ('UPDATE '.sql_table('plug_extraskin_jp').' SET fieldtype="skin" WHERE fieldtype=1');
-			sql_query ('UPDATE '.sql_table('plug_extraskin_jp').' SET fieldtype="global" WHERE fieldtype<>"skin"');
+			sql_query ("ALTER TABLE {$tbl_plug_extraskin_jp} DROP skin");
+			sql_query ("ALTER TABLE {$tbl_plug_extraskin_jp} CHANGE pageflg fieldtype varchar (10) not null");
+			sql_query ("UPDATE {$tbl_plug_extraskin_jp} SET fieldtype='skin' WHERE fieldtype=1");
+			sql_query ("UPDATE {$tbl_plug_extraskin_jp} SET fieldtype='global' WHERE fieldtype<>'skin'");
 			
-			sql_query ('ALTER TABLE '.sql_table('plug_extraskin_jp').' CHANGE title title varchar(200) not null');
-			sql_query ('ALTER TABLE '.sql_table('plug_extraskin_jp').' CHANGE description  description varchar(200) not null');
-			sql_query ('ALTER TABLE '.sql_table('plug_extraskin_jp').' CHANGE url url varchar(255) not null');
-			sql_query ('ALTER TABLE '.sql_table('plug_extraskin_jp').' CHANGE contenttype contenttype varchar(40) not null');
-			sql_query ('ALTER TABLE '.sql_table('plug_extraskin_jp').' CHANGE includemode includemode varchar(10) not null');
-			sql_query ('ALTER TABLE '.sql_table('plug_extraskin_jp').' CHANGE includeprefix includeprefix varchar(50) not null');
+			sql_query ("ALTER TABLE {$tbl_plug_extraskin_jp} CHANGE title title varchar(200) not null");
+			sql_query ("ALTER TABLE {$tbl_plug_extraskin_jp} CHANGE description  description varchar(200) not null");
+			sql_query ("ALTER TABLE {$tbl_plug_extraskin_jp} CHANGE url url varchar(255) not null");
+			sql_query ("ALTER TABLE {$tbl_plug_extraskin_jp} CHANGE contenttype contenttype varchar(40) not null");
+			sql_query ("ALTER TABLE {$tbl_plug_extraskin_jp} CHANGE includemode includemode varchar(10) not null");
+			sql_query ("ALTER TABLE {$tbl_plug_extraskin_jp} CHANGE includeprefix includeprefix varchar(50) not null");
 		}
 		if (!in_array("skinvartype",$names)) {
-			sql_query ('ALTER TABLE '.sql_table('plug_extraskin_jp').' ADD skinvartype varchar (15) not null');
-			sql_query ('ALTER TABLE '.sql_table('plug_extraskin_jp').' ADD skintype varchar (15) not null');
-			sql_query ('ALTER TABLE '.sql_table('plug_extraskin_jp').' ADD filter varchar (50) not null');
-			sql_query ('UPDATE '.sql_table('plug_extraskin_jp').' SET skinvartype="index",  skintype="pageparser" WHERE fieldtype="skin" and skinvartype=""');
+			sql_query ("ALTER TABLE {$tbl_plug_extraskin_jp} ADD skinvartype varchar (15) not null");
+			sql_query ("ALTER TABLE {$tbl_plug_extraskin_jp} ADD skintype varchar (15) not null");
+			sql_query ("ALTER TABLE {$tbl_plug_extraskin_jp} ADD filter varchar (50) not null");
+			sql_query ("UPDATE {$tbl_plug_extraskin_jp} SET skinvartype='index', skintype='pageparser' WHERE fieldtype='skin' and skinvartype=''");
 		}
 	}
 	
@@ -203,7 +208,7 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 		if (!$tablename) return;
 		
 		if ($mode != 'include') {
-			$res=sql_query("select * from ".sql_table('plug_extraskin_jp')." where title='".mysql_real_escape_string($tablename)."'");
+			$res=sql_query("SELECT * FROM ".sql_table('plug_extraskin_jp')." WHERE title='".mysql_real_escape_string($tablename)."'");
 			if (!$res || !mysql_num_rows($res)) return;
 			$o = mysql_fetch_object($res);
 			$fieldtype = $o->fieldtype;
@@ -604,4 +609,3 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 	}
 
 }
-?>
