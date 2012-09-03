@@ -78,7 +78,7 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 			refid int (11) not null,
 			body text not null,
 			PRIMARY KEY (tableid,context,refid)
-		)');
+		) ENGINE=MyISAM');
 		
 		$check_column = sql_query('SELECT * FROM '. sql_table('plug_extraskin_jp'));
 		for ($i=0; $i<mysql_num_fields($check_column); $i++) {
