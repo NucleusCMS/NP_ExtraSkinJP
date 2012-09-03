@@ -48,16 +48,11 @@ class PLUG_ADMIN {
 	}
 
 	function requestEx($name) {
-		if(phpversion()<"4.1.0") {
-			global $HTTP_POST_VARS, $HTTP_GET_VARS;
-			$data = $HTTP_POST_VARS[$name] ? $HTTP_POST_VARS[$name] : $HTTP_GET_VARS[$name];
-		} else {
-			$data = $_REQUEST[$name];
-		}
+		$data = $_REQUEST[$name];
 		if (is_array($data) && get_magic_quotes_gpc()) {
-				return array_map("stripslashes",$data);
+			return array_map("stripslashes",$data);
 		} else {
-				return get_magic_quotes_gpc() ? stripslashes($data) : $data;
+			return get_magic_quotes_gpc() ? stripslashes($data) : $data;
 		}
 	}
 
