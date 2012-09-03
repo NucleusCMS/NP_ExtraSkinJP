@@ -1,5 +1,4 @@
 <?php
-
 /* 
   Class for Plugin Admin Area 
   Taka http://vivian.stripper.jp/ 2004-04-13
@@ -96,8 +95,8 @@ class PLUG_ADMIN {
       $checked_array : Array containing blogID which should be checked beforehand.
    */
 
-		$query = 'SELECT bnumber, bname FROM '.sql_table('blog').' ORDER BY bnumber';
-		$res = sql_query($query);
+		$tbl_blog = sql_table('blog');
+		$res = sql_query("SELECT bnumber, bname FROM {$tbl_blog} ORDER BY bnumber");
 		
 		while ($data = mysql_fetch_assoc($res)) {
 			$data['bname'] = htmlspecialchars(shorten($data['bname'],16,'..'));
@@ -121,8 +120,8 @@ class PLUG_ADMIN {
       $checked_array : Array containing catID which should be checked beforehand.
    */
 
-		$query = 'SELECT catid, cname FROM '.sql_table('category').'WHERE cblog='.$blogid.' ORDER BY catid';
-		$res = sql_query($query);
+		$tbl_category = sql_table('category');
+		$res = sql_query("SELECT catid, cname FROM {$tbl_category} WHERE cblog='{$blogid}' ORDER BY catid");
 		
 		while ($data = mysql_fetch_assoc($res)) {
 			$data['cname'] = htmlspecialchars(shorten($data['cname'],16,'..'));
@@ -167,14 +166,16 @@ class PLUG_ADMIN {
 
 	function showAllCategorySelectMenu($name, $selected = '', $tabindex = 0) {
 		
+		$tbl_blog     = sql_table('blog');
+		$tbl_category = sql_table('category');
+		
 		echo '<select name="',$name,'" tabindex="',$tabindex,'">';
 		if (!$selected) {
 			echo '<option value="" selected="selected"> --- </option>';
 		}
 
 		// 1. select blogs (we'll create optiongroups)
-		$queryBlogs =  'SELECT bnumber, bname FROM '.sql_table('blog').' ORDER BY bnumber';
-		$blogs = sql_query($queryBlogs);
+		$blogs = sql_query("SELECT bnumber, bname FROM {$tbl_blog} ORDER BY bnumber");
 		if (mysql_num_rows($blogs) > 1) {
 			$multipleBlogs = 1;
 		}
@@ -185,7 +186,7 @@ class PLUG_ADMIN {
 			}
 		
 			// 2. for each category in that blog
-			$categories = sql_query('SELECT cname, catid FROM '.sql_table('category').' WHERE cblog=' . $oBlog->bnumber . ' ORDER BY cname ASC');
+			$categories = sql_query("SELECT cname, catid FROM {$tbl_category} WHERE cblog='{$oBlog->bnumber}' ORDER BY cname ASC");
 			while ($oCat = mysql_fetch_object($categories)) {
 				if ($oCat->catid == $selected)
 					$selectText = ' selected="selected" ';
@@ -230,31 +231,36 @@ class PLUG_TEMPLATE_MANAGER {
 	}
 
 	function getIdFromName($name) {
-		return quickQuery('SELECT '.$this->idkey.' as result FROM '.$this->table.' WHERE '.$this->namekey.'="'.mysql_real_escape_string($name).'"');
+		$name = mysql_real_escape_string($name);
+		return quickQuery("SELECT {$this->idkey} as result FROM {$this->table} WHERE {$this->namekey}='{$name}'");
 	}
 
 	function getNameFromID($id) {
-		return quickQuery('SELECT '.$this->namekey.' as result FROM '.$this->table.' WHERE '.$this->idkey.'='.intval($id));
+		$id = intval($id);
+		return quickQuery("SELECT {$this->namekey} as result FROM {$this->table} WHERE {$this->idkey}='{$id}'");
 	}
 	
 	function getDataFromID($dataname,$id) {
-		return quickQuery('SELECT '.$dataname.' as result FROM '.$this->table.' WHERE '.$this->idkey.'='.intval($id));
+		$id = intval($id);
+		return quickQuery("SELECT {$dataname} as result FROM {$this->table} WHERE {$this->idkey}='{$id}'");
 	}
 	
 	function exists($name) {
-		$res = sql_query('SELECT * FROM '.$this->table.' WHERE '.$this->namekey.'="'.mysql_real_escape_string($name).'"');
+		$name = mysql_real_escape_string($name);
+		$res = sql_query("SELECT * FROM {$this->table} WHERE {$this->namekey}='{$name}'");
 		return (mysql_num_rows($res) != 0);
 	}
 	
 	function existsID($id) {
-		$res = sql_query('select * FROM '.$this->table.' WHERE '.$this->idkey.'='.intval($id));
+		$id = intval($id);
+		$res = sql_query("SELECT * FROM {$this->table} WHERE {$this->idkey}='{$id}'");
 		return (mysql_num_rows($res) != 0);
 	}
 	
 	function getNameList($w='') {
 		$where = '';
-		if ($w != '') $where = ' WHERE '.$w;
-		$res = sql_query('SELECT '.$this->idkey.' as id, '.$this->namekey.' as name FROM '.$this->table. $where .' ORDER BY '.$this->namekey);
+		if ($w != '') $where = 'WHERE '.$w;
+		$res = sql_query("SELECT {$this->idkey} as id, {$this->namekey} as name FROM {$this->table} {$where} ORDER BY {$this->namekey}");
 		while ($obj = mysql_fetch_object($res)) {
 			$templates[intval($obj->id)] = $obj->name;
 		}
@@ -262,32 +268,28 @@ class PLUG_TEMPLATE_MANAGER {
 	}
 	
 	function read($name) {
-		$query = 'SELECT * FROM '.$this->table.' WHERE '.$this->namekey.'="'.mysql_real_escape_string($name).'"';
-		$res = sql_query($query);
+		$name = mysql_real_escape_string($name);
+		$res = sql_query("SELECT * FROM {$this->table} WHERE {$this->namekey}='{$name}'");
 		return mysql_fetch_assoc($res);
 	}
 
 	function createTemplate($name) {
-		sql_query('INSERT INTO '.$this->table.' SET '.$this->namekey.'="'. mysql_real_escape_string($name) .'"');
+		$name = mysql_real_escape_string($name);
+		sql_query("INSERT INTO {$this->table} SET {$this->namekey}='{$name}'");
 		$newid = mysql_insert_id();
 		return $newid;
 	}
 
 	function updateTemplate($id, $template) {
-		$query = 'UPDATE '.$this->table.' SET ';
 		foreach ($template as $k => $v) {
-			$query .= $k.'="'.mysql_real_escape_string($v).'",';
+			$v = mysql_real_escape_string($v);
+			$pairs[] = "$k='{$v}'";
 		}
-		$query = substr($query,0,-1);
-		$query .= ' WHERE '.$this->idkey.'='.$id;
-		sql_query($query);
+		$sets = join(',', $pairs);
+		sql_query("UPDATE {$this->table} SET {$sets} WHERE {$this->idkey}='{$id}'");
 	}
 
 	function deleteTemplate($id) {
-		sql_query('DELETE FROM '.$this->table.' WHERE '.$this->idkey.'=' . $id);
+		sql_query("DELETE FROM {$this->table} WHERE {$this->idkey}='{$id}'");
 	}
-
 }
-
-
-?>
