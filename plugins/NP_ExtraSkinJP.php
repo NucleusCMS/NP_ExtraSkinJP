@@ -71,7 +71,7 @@ class NP_ExtraSkinJP extends NucleusPlugin {
               'PRIMARY KEY (tableid), '.
               'UNIQUE titleindx (title), '.
               'KEY urlindx (url) '.
-              ') TYPE=MyISAM');
+              ') ENGINE=MyISAM');
 		sql_query('CREATE TABLE IF NOT EXISTS '.sql_table('plug_extraskin_jp_data').' (
 			tableid int(11) not null,
 			context varchar (10) not null,
