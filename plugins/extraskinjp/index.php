@@ -594,7 +594,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 		$body = quickQuery("SELECT body as result FROM ". $this->data_table. " WHERE context='blog' and refid=$refid and tableid=$tableid");
 		
 		$extrahead = '<script type="text/javascript" src="'.$CONF['AdminURL'].'javascript/templateEdit.js"></script>';
-		$extrahead .= '<script type="text/javascript">setTemplateEditText("'.addslashes(_EDITTEMPLATE_EMPTY).'");</script>'."\n";
+		$extrahead .= '<script type="text/javascript">setTemplateEditText("'.mysql_real_escape_string(_EDITTEMPLATE_EMPTY).'");</script>'."\n";
 		$oPluginAdmin->start($extrahead);
 
 ?>
@@ -725,7 +725,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 		}
 
 		$extrahead = '<script type="text/javascript" src="'.$CONF['AdminURL'].'javascript/templateEdit.js"></script>';
-		$extrahead .= '<script type="text/javascript">setTemplateEditText("'.addslashes(_EDITTEMPLATE_EMPTY).'");</script>'."\n";
+		$extrahead .= '<script type="text/javascript">setTemplateEditText("'.mysql_real_escape_string(_EDITTEMPLATE_EMPTY).'");</script>'."\n";
 		$oPluginAdmin->start($extrahead);
 
 ?>
@@ -872,9 +872,9 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 	
 		if (trim($body)) {
 			if ($checkrow && mysql_num_rows($checkrow) > 0) {
-				$res = mysql_query("UPDATE ". $this->data_table ." SET body='".addslashes($body)."' WHERE refid=$refid and context='$context' and tableid=$tableid");
+				$res = mysql_query("UPDATE ". $this->data_table ." SET body='".mysql_real_escape_string($body)."' WHERE refid=$refid and context='$context' and tableid=$tableid");
 			} else {
-				$res = mysql_query("INSERT INTO ". $this->data_table ." SET refid=$refid, context='$context', body='".addslashes($body)."', tableid=$tableid");
+				$res = mysql_query("INSERT INTO ". $this->data_table ." SET refid=$refid, context='$context', body='".mysql_real_escape_string($body)."', tableid=$tableid");
 			}
 		} else {
 			if ($checkrow && mysql_num_rows($checkrow) > 0) {

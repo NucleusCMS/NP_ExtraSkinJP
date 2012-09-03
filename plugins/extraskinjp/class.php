@@ -230,7 +230,7 @@ class PLUG_TEMPLATE_MANAGER {
 	}
 
 	function getIdFromName($name) {
-		return quickQuery('SELECT '.$this->idkey.' as result FROM '.$this->table.' WHERE '.$this->namekey.'="'.addslashes($name).'"');
+		return quickQuery('SELECT '.$this->idkey.' as result FROM '.$this->table.' WHERE '.$this->namekey.'="'.mysql_real_escape_string($name).'"');
 	}
 
 	function getNameFromID($id) {
@@ -242,7 +242,7 @@ class PLUG_TEMPLATE_MANAGER {
 	}
 	
 	function exists($name) {
-		$res = sql_query('SELECT * FROM '.$this->table.' WHERE '.$this->namekey.'="'.addslashes($name).'"');
+		$res = sql_query('SELECT * FROM '.$this->table.' WHERE '.$this->namekey.'="'.mysql_real_escape_string($name).'"');
 		return (mysql_num_rows($res) != 0);
 	}
 	
@@ -262,13 +262,13 @@ class PLUG_TEMPLATE_MANAGER {
 	}
 	
 	function read($name) {
-		$query = 'SELECT * FROM '.$this->table.' WHERE '.$this->namekey.'="'.addslashes($name).'"';
+		$query = 'SELECT * FROM '.$this->table.' WHERE '.$this->namekey.'="'.mysql_real_escape_string($name).'"';
 		$res = sql_query($query);
 		return mysql_fetch_assoc($res);
 	}
 
 	function createTemplate($name) {
-		sql_query('INSERT INTO '.$this->table.' SET '.$this->namekey.'="'. addslashes($name) .'"');
+		sql_query('INSERT INTO '.$this->table.' SET '.$this->namekey.'="'. mysql_real_escape_string($name) .'"');
 		$newid = mysql_insert_id();
 		return $newid;
 	}
@@ -276,7 +276,7 @@ class PLUG_TEMPLATE_MANAGER {
 	function updateTemplate($id, $template) {
 		$query = 'UPDATE '.$this->table.' SET ';
 		foreach ($template as $k => $v) {
-			$query .= $k.'="'.addslashes($v).'",';
+			$query .= $k.'="'.mysql_real_escape_string($v).'",';
 		}
 		$query = substr($query,0,-1);
 		$query .= ' WHERE '.$this->idkey.'='.$id;

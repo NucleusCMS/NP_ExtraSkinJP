@@ -89,7 +89,7 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 		if (in_array("skin",$names)) {
 			while ($o = mysql_fetch_object($check_column)) {
 				$context = ($o->pageflg) ? "skin" : "global";
-				$query = "INSERT INTO ". sql_table('plug_extraskin_jp_data') . '(tableid, context, refid, body) VALUES ('.$o->tableid.', "'.$context.'", 0, "'.addslashes($o->skin).'")';
+				$query = "INSERT INTO ". sql_table('plug_extraskin_jp_data') . '(tableid, context, refid, body) VALUES ('.$o->tableid.', "'.$context.'", 0, "'.mysql_real_escape_string($o->skin).'")';
 				sql_query($query);
 			}
 			sql_query ('ALTER TABLE '.sql_table('plug_extraskin_jp').' DROP skin');
@@ -203,7 +203,7 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 		if (!$tablename) return;
 		
 		if ($mode != 'include') {
-			$res=sql_query("select * from ".sql_table('plug_extraskin_jp')." where title='".addslashes($tablename)."'");
+			$res=sql_query("select * from ".sql_table('plug_extraskin_jp')." where title='".mysql_real_escape_string($tablename)."'");
 			if (!$res || !mysql_num_rows($res)) return;
 			$o = mysql_fetch_object($res);
 			$fieldtype = $o->fieldtype;
@@ -302,7 +302,7 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 									break;
 								case 'category':
 									if ($o->fieldtype == "blogcat") {
-										$v = quickQuery('SELECT catid as result FROM '.sql_table('category').' WHERE cname="'.addslashes($v).'"');
+										$v = quickQuery('SELECT catid as result FROM '.sql_table('category').' WHERE cname="'.mysql_real_escape_string($v).'"');
 									}
 									break;
 							}
@@ -335,7 +335,7 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 				if (!$all) $where .= ' and ';
 				$where .= 'tableid='.$o->tableid;
 				
-				$query = 'SELECT body FROM '.sql_table('plug_extraskin_jp_data').' WHERE '.$where.' and context="'.addslashes($mode).'"';
+				$query = 'SELECT body FROM '.sql_table('plug_extraskin_jp_data').' WHERE '.$where.' and context="'.mysql_real_escape_string($mode).'"';
 				if ($all) {
 					$query .= ' ORDER BY refid '.$sort;
 				} elseif (count($refids) > 1) {
@@ -406,7 +406,7 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 		global $manager, $CONF, $blog, $member, $memberinfo, $maxresults;
 		
 		$url = rawurldecode($requests[0]);
-		$url = addslashes(stripslashes($url));
+		$url = mysql_real_escape_string(stripslashes($url));
 		$r = mysql_query('SELECT e.*, d.body as skin FROM '.sql_table('plug_extraskin_jp').' as e, '.sql_table('plug_extraskin_jp_data').' as d WHERE url="'.$url.'" and e.tableid=d.tableid and d.context="skin" and d.refid=0');
 		if ($r) $o = mysql_fetch_object($r);
 	 
