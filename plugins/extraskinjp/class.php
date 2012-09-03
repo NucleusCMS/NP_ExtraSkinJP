@@ -12,6 +12,9 @@
 
 class PLUG_ADMIN {
 	
+	function __construct() {
+	}
+	
 	function action($action) {
 		$methodName = 'action_' . $action;
 		if (method_exists($this, $methodName)) {
