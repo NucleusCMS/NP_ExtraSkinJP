@@ -162,31 +162,31 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 		<tr onmouseover='focusRow(this);' onmouseout='blurRow(this);'>
 			<td style="line-height: 1.2">
 				<dl style="margin: 0px;">
-					<dt><strong><?php echo htmlspecialchars($v) ?></strong></dt>
-					<dd style="margin-left: 1.5em">URL: <?php echo htmlspecialchars($sdata['url']) ?><br />
+					<dt><strong><?php echo $this->hsc($v) ?></strong></dt>
+					<dd style="margin-left: 1.5em">URL: <?php echo $this->hsc($sdata['url']) ?><br />
 					<?php 
-						echo _LISTS_TYPE .': '. htmlspecialchars($sdata['contenttype']) ?><br /><br />
+						echo _LISTS_TYPE .': '. $this->hsc($sdata['contenttype']) ?><br /><br />
 					<?php
 						echo _LIST_SKINS_INCMODE .': '. $this->incmode[$sdata['includemode']] ?><br />
 					<?php
 						if ($sdata['includeprefix']) {
-							echo _LIST_SKINS_INCPREFIX.': '. htmlspecialchars($sdata['includeprefix']) ?><br />
+							echo _LIST_SKINS_INCPREFIX.': '. $this->hsc($sdata['includeprefix']) ?><br />
 					<?php
 						}
-						echo _NPSKIN_VAR_TYPE.': '. htmlspecialchars($this->skinvartype[$sdata['skinvartype']]) ?><br />
+						echo _NPSKIN_VAR_TYPE.': '. $this->hsc($this->skinvartype[$sdata['skinvartype']]) ?><br />
 					<?php
-						echo _NPSKIN_TYPE.': '. htmlspecialchars($this->skintype[$sdata['skintype']]) ?><br />
+						echo _NPSKIN_TYPE.': '. $this->hsc($this->skintype[$sdata['skintype']]) ?><br />
 					<?php
 						if ($sdata['filter']) {
-							echo _NPSKIN_FILTER.': '. htmlspecialchars($sdata['filter']);
+							echo _NPSKIN_FILTER.': '. $this->hsc($sdata['filter']);
 						} ?>
 					</dd>
 				</dl>
 			</td>
-			<td><?php echo htmlspecialchars($sdata['description']) ?></td>
-			<td><a href="<?php echo htmlspecialchars($manager->addTicketToUrl($this->url.'index.php?action=skinedit&tableid='.$k)); ?>" tabindex="50"><?php echo _LISTS_EDIT?></a></td>
-			<td><a href="<?php echo htmlspecialchars($manager->addTicketToUrl($this->url.'index.php?action=skinclone&tableid='.$k)); ?>" tabindex="50"><?php echo _LISTS_CLONE?></a></td>
-			<td><a href="<?php echo htmlspecialchars($manager->addTicketToUrl($this->url.'index.php?action=skindelete&tableid='.$k)); ?>" tabindex="50"><?php echo _LISTS_DELETE?></a></td>
+			<td><?php echo $this->hsc($sdata['description']) ?></td>
+			<td><a href="<?php echo $this->hsc($manager->addTicketToUrl($this->url.'index.php?action=skinedit&tableid='.$k)); ?>" tabindex="50"><?php echo _LISTS_EDIT?></a></td>
+			<td><a href="<?php echo $this->hsc($manager->addTicketToUrl($this->url.'index.php?action=skinclone&tableid='.$k)); ?>" tabindex="50"><?php echo _LISTS_CLONE?></a></td>
+			<td><a href="<?php echo $this->hsc($manager->addTicketToUrl($this->url.'index.php?action=skindelete&tableid='.$k)); ?>" tabindex="50"><?php echo _LISTS_DELETE?></a></td>
 		</tr>
 <?php
 			}
@@ -268,7 +268,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 				<?php 
 					echo _NPTYPE_TITLE .': '.$this->ptype[$pdata['fieldtype']] ?>
 			</td>
-			<td><?php echo htmlspecialchars($pdata['description']);?><br /><br />
+			<td><?php echo $this->hsc($pdata['description']);?><br /><br />
 <?php
 	
 				if ($this->bclist && $pdata['fieldtype'] != "global") {
@@ -278,32 +278,32 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 						
 						echo  _NPDIFINED_FIELD."\n";
 						if ($pdata['fieldtype'] == 'blog') {
-							echo ' [ <a href="'.htmlspecialchars($manager->addTicketToUrl($this->url.'index.php?action=editallbfield&tableid='.$pdata['tableid'])).'">'._NPEDIT_ALLFIELD.'</a> ]'."\n";
+							echo ' [ <a href="'.$this->hsc($manager->addTicketToUrl($this->url.'index.php?action=editallbfield&tableid='.$pdata['tableid'])).'">'._NPEDIT_ALLFIELD.'</a> ]'."\n";
 						}
 						echo "				<ul style=\"margin-top: 0.5em\">\n";
 						while ($o = mysql_fetch_object($res)) {
 	?>
-						<li><a href="<?php echo htmlspecialchars($manager->addTicketToUrl($this->url.'index.php?action=editfield&refid='.$o->bnumber)); ?>&amp;tableid=<?php echo $pdata['tableid'] ?>"><?php echo htmlspecialchars($o->bname) ?></a></li>
+						<li><a href="<?php echo $this->hsc($manager->addTicketToUrl($this->url.'index.php?action=editfield&refid='.$o->bnumber)); ?>&amp;tableid=<?php echo $pdata['tableid'] ?>"><?php echo $this->hsc($o->bname) ?></a></li>
 	<?php
 						}
 						echo "				</ul>\n";
 					} elseif  ($pdata['fieldtype'] == 'blog') {
-						echo '[ <a href="'.htmlspecialchars($manager->addTicketToUrl($this->url.'index.php?action=editallbfield&tableid='.$pdata['tableid'])).'">'._NPEDIT_ALLFIELD.'</a> ]'."\n";
+						echo '[ <a href="'.$this->hsc($manager->addTicketToUrl($this->url.'index.php?action=editallbfield&tableid='.$pdata['tableid'])).'">'._NPEDIT_ALLFIELD.'</a> ]'."\n";
 					} 
 				}
 ?>
 			</td>
-			<td><a href="<?php echo htmlspecialchars($manager->addTicketToUrl($this->url.'index.php?action=partedit&tableid='.$k)); ?>" tabindex="70"><?php echo _LISTS_EDIT?></a></td>
+			<td><a href="<?php echo $this->hsc($manager->addTicketToUrl($this->url.'index.php?action=partedit&tableid='.$k)); ?>" tabindex="70"><?php echo _LISTS_EDIT?></a></td>
 			<td>
 <?php
 				if ($pdata['fieldtype'] == "global") {
 ?>
-				<a href="<?php echo htmlspecialchars($manager->addTicketToUrl($this->url.'index.php?action=partclone&tableid='.$k)); ?>" tabindex="70"><?php echo _LISTS_CLONE?></a>
+				<a href="<?php echo $this->hsc($manager->addTicketToUrl($this->url.'index.php?action=partclone&tableid='.$k)); ?>" tabindex="70"><?php echo _LISTS_CLONE?></a>
 <?php
 				}
 ?>
 			</td>
-			<td><a href="<?php echo htmlspecialchars($manager->addTicketToUrl($this->url.'index.php?action=partdelete&tableid='.$k)); ?>" tabindex="70"><?php echo _LISTS_DELETE?></a></td>
+			<td><a href="<?php echo $this->hsc($manager->addTicketToUrl($this->url.'index.php?action=partdelete&tableid='.$k)); ?>" tabindex="70"><?php echo _LISTS_DELETE?></a></td>
 		</tr>
 <?php
 			}
@@ -389,13 +389,13 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 			<td><input name="<?php echo $this->template_namepart ?>" tabindex="50" size="20" maxlength="200" value="<?php echo $sname ?>" /></td>
 		</tr><tr>
 			<td><?php echo _SKIN_DESC?></td>
-			<td><input name="description" tabindex="50" size="60" maxlength="200" value="<?php echo htmlspecialchars($sdata['description']) ?>" /></td>
+			<td><input name="description" tabindex="50" size="60" maxlength="200" value="<?php echo $this->hsc($sdata['description']) ?>" /></td>
 		</tr><tr>
 			<td>URL <?php $this->help('url');?></td>
-			<td><input name="url" tabindex="50" size="60" maxlength="250" value="<?php echo htmlspecialchars($sdata['url']) ?>" /></td>
+			<td><input name="url" tabindex="50" size="60" maxlength="250" value="<?php echo $this->hsc($sdata['url']) ?>" /></td>
 		</tr><tr>
 			<td>ContentType</td>
-			<td><input name="contenttype" tabindex="50" size="20" maxlength="40" value="<?php echo htmlspecialchars($sdata['contenttype']) ?>" /></td>
+			<td><input name="contenttype" tabindex="50" size="20" maxlength="40" value="<?php echo $this->hsc($sdata['contenttype']) ?>" /></td>
 		</tr><tr>
 			<td><?php echo _SKIN_INCLUDE_MODE?> <?php $this->help('parser-properties');?></td>
 			<td>
@@ -405,7 +405,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 			</td>
 		</tr><tr>
 			<td><?php echo _SKIN_INCLUDE_PREFIX?> <?php $this->help('parser-properties');?></td>
-			<td><input name="includeprefix" tabindex="50" size="20" maxlength="50" value="<?php echo htmlspecialchars($sdata['includeprefix']) ?>" /></td>
+			<td><input name="includeprefix" tabindex="50" size="20" maxlength="50" value="<?php echo $this->hsc($sdata['includeprefix']) ?>" /></td>
 		</tr><tr>
 			<td><?php echo _NPSKIN_VAR_TYPE?> <?php $this->help('skinvartype');?></td>
 			<td>
@@ -422,14 +422,14 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 			</td>
 		</tr><tr>
 			<td><?php echo _NPSKIN_FILTER?> <?php $this->help('filter');?></td>
-			<td><input name="filter" tabindex="50" size="20" maxlength="50" value="<?php echo htmlspecialchars($sdata['filter']) ?>" /></td>
+			<td><input name="filter" tabindex="50" size="20" maxlength="50" value="<?php echo $this->hsc($sdata['filter']) ?>" /></td>
 		</tr></table>
 
 <?php
 		echo '<h3>'._NPPAGESKIN_EDIT_TITLE."</h3>\n";
 		
 ?>
-	<textarea name="body" rows='<?php echo $this->srows ?>' cols="<?php echo $this->scols ?>" tabindex="50"><?php echo htmlspecialchars($body)?></textarea><br /><br />
+	<textarea name="body" rows='<?php echo $this->srows ?>' cols="<?php echo $this->scols ?>" tabindex="50"><?php echo $this->hsc($body)?></textarea><br /><br />
 	<input type="submit" tabindex="50" value="<?php echo _SKIN_UPDATE_BTN ?>" onclick="return checkSubmit();" />
 	<input type="reset" tabindex="50" value="<?php echo _SKIN_RESET_BTN ?>" />
 	</div>
@@ -492,14 +492,14 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 			<td><input name="<?php echo $this->template_namepart ?>" tabindex="50" size="20" maxlength="200" value="<?php echo $pname ?>" /></td>
 		</tr><tr>
 			<td><?php echo _NPPART_DESC?></td>
-			<td><input name="description" tabindex="50" size="60" maxlength="200" value="<?php echo htmlspecialchars($pdata['description']) ?>" /></td>
+			<td><input name="description" tabindex="50" size="60" maxlength="200" value="<?php echo $this->hsc($pdata['description']) ?>" /></td>
 		</tr></table>
 
 <?php
 		echo '<h3>'._NPPART_EDIT_TITLE."</h3>\n";
 		
 ?>
-	<textarea name="body" rows='<?php echo $this->prows ?>' cols="<?php echo $this->pcols ?>" tabindex="50"><?php echo htmlspecialchars($body)?></textarea><br /><br />
+	<textarea name="body" rows='<?php echo $this->prows ?>' cols="<?php echo $this->pcols ?>" tabindex="50"><?php echo $this->hsc($body)?></textarea><br /><br />
 	<input type="submit" tabindex="50" value="<?php echo _NPPART_UPDATE_BTN ?>" onclick="return checkSubmit();" />
 	<input type="reset" tabindex="50" value="<?php echo _NPPART_RESET_BTN ?>" />
 	</div>
@@ -526,8 +526,8 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 			while ($blogs = mysql_fetch_assoc($res)) {
 ?>
 		<tr>
-			<td><?php echo htmlspecialchars($blogs['bname']) ?></td>
-			<td><a href="<?php echo htmlspecialchars($manager->addTicketToUrl($this->url.'index.php?action=editfield&refid='.$blogs['bnumber'])); ?>&amp;tableid=<?php echo $pdata['tableid'] ?>"><?php echo _LISTS_EDIT?></a></td>
+			<td><?php echo $this->hsc($blogs['bname']) ?></td>
+			<td><a href="<?php echo $this->hsc($manager->addTicketToUrl($this->url.'index.php?action=editfield&refid='.$blogs['bnumber'])); ?>&amp;tableid=<?php echo $pdata['tableid'] ?>"><?php echo _LISTS_EDIT?></a></td>
 		</tr>
 <?php
 			}
@@ -545,10 +545,10 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 			<th colspan="2"><?php echo _OVERVIEW_GSETTINGS ?></th>
 		</tr><tr>
 			<td><?php echo _NPPART_NAME?> <?php $this->help('name');?></td>
-			<td><input name="<?php echo $this->template_namepart ?>" tabindex="4" size="20" maxlength="20" value="<?php echo htmlspecialchars($pname) ?>" /></td>
+			<td><input name="<?php echo $this->template_namepart ?>" tabindex="4" size="20" maxlength="20" value="<?php echo $this->hsc($pname) ?>" /></td>
 		</tr><tr>
 			<td><?php echo _NPPART_DESC?></td>
-			<td><input name="description" tabindex="5" size="60" maxlength="200" value="<?php echo htmlspecialchars($pdata['description']) ?>" /></td>
+			<td><input name="description" tabindex="5" size="60" maxlength="200" value="<?php echo $this->hsc($pdata['description']) ?>" /></td>
 		</tr><tr>
 			<td><?php echo _NPTYPE_TITLE?> <?php $this->help('fieldtype');?></td>
 			<td><?php $this->showRadioButton('fieldtype',$this->blogcat,$fieldtype,20) ?></td>
@@ -598,10 +598,10 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 		$oPluginAdmin->start($extrahead);
 
 ?>
-<p><a href="<?php echo $this->url ?>index.php?action=overview"><?php echo _NPPLUGIN_GOBACK?></a> | <a href="<?php echo htmlspecialchars($manager->addTicketToUrl($this->url.'index.php?action=partedit&tableid='.$tableid)); ?>"><?php echo htmlspecialchars($pname)._NPPLUGIN_GOBACK_PTOP ?></a></p>
+<p><a href="<?php echo $this->url ?>index.php?action=overview"><?php echo _NPPLUGIN_GOBACK?></a> | <a href="<?php echo $this->hsc($manager->addTicketToUrl($this->url.'index.php?action=partedit&tableid='.$tableid)); ?>"><?php echo $this->hsc($pname)._NPPLUGIN_GOBACK_PTOP ?></a></p>
 
 <?php
-		echo '<h2>'._NPPART_EDIT_TITLE.' : '.htmlspecialchars($pname).' &gt; '.htmlspecialchars($hname)."</h2>\n";
+		echo '<h2>'._NPPART_EDIT_TITLE.' : '.$this->hsc($pname).' &gt; '.$this->hsc($hname)."</h2>\n";
 		if ($msg) echo "<p>"._MESSAGE.": $msg</p>\n\n";
 		echo '<h3>'._NPBLOG_TITLE."</h3>\n";
 ?>
@@ -618,9 +618,9 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 ?>
 	<table><tr><th colspan="2"><?php echo _NPBLOG_TITLE ?></th>
 	</tr><tr>
-		<td><?php echo htmlspecialchars($hname)?></td>
+		<td><?php echo $this->hsc($hname)?></td>
 		<td id="td1">
-			<textarea name="body" rows='<?php echo $this->brows ?>' cols="<?php echo $this->bcols ?>" tabindex="5" id="textarea1"><?php echo htmlspecialchars($body)?></textarea>
+			<textarea name="body" rows='<?php echo $this->brows ?>' cols="<?php echo $this->bcols ?>" tabindex="5" id="textarea1"><?php echo $this->hsc($body)?></textarea>
 		</td>
 	</tr><tr>
 		<td><?php echo _NPFIELD_UPDATE ?></td>
@@ -632,7 +632,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 <?php
 		} else {
 ?>
-	<textarea name="body" rows='<?php echo $this->brows ?>' cols="<?php echo $this->bcols ?>" tabindex="5"><?php echo htmlspecialchars($body)?></textarea><br /><br />
+	<textarea name="body" rows='<?php echo $this->brows ?>' cols="<?php echo $this->bcols ?>" tabindex="5"><?php echo $this->hsc($body)?></textarea><br /><br />
 	<input type="submit" tabindex="6" value="<?php echo _NPFIELD_UPDATE_BTN?>" onclick="return checkSubmit();" />
 	<input type="reset" tabindex="7" value="<?php echo _NPFIELD_RESET_BTN?>" />
 <?php
@@ -681,8 +681,8 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 				foreach ($cnames as $k => $v) {
 ?>
 			</tr><tr>
-				<td><?php echo htmlspecialchars($v) ?></td>
-				<td id="td<?php echo $cnt ?>"><textarea name="<?php echo 'cbody['.$k.']' ?>" rows="<?php echo $this->brows ?>" cols="<?php echo $this->bcols ?>" id="textarea<?php echo $cnt ?>" tabindex="30"><?php echo htmlspecialchars($cbodys[$k]) ?></textarea></td>
+				<td><?php echo $this->hsc($v) ?></td>
+				<td id="td<?php echo $cnt ?>"><textarea name="<?php echo 'cbody['.$k.']' ?>" rows="<?php echo $this->brows ?>" cols="<?php echo $this->bcols ?>" id="textarea<?php echo $cnt ?>" tabindex="30"><?php echo $this->hsc($cbodys[$k]) ?></textarea></td>
 <?php
 					$cnt ++;
 				}
@@ -729,10 +729,10 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 		$oPluginAdmin->start($extrahead);
 
 ?>
-<p><a href="<?php echo $this->url ?>index.php?action=overview"><?php echo _NPPLUGIN_GOBACK?></a> | <a href="<?php echo htmlspecialchars($manager->addTicketToUrl($this->url.'index.php?action=partedit&tableid='.$tableid)); ?>"><?php echo htmlspecialchars($pname)._NPPLUGIN_GOBACK_PTOP ?></a></p>
+<p><a href="<?php echo $this->url ?>index.php?action=overview"><?php echo _NPPLUGIN_GOBACK?></a> | <a href="<?php echo $this->hsc($manager->addTicketToUrl($this->url.'index.php?action=partedit&tableid='.$tableid)); ?>"><?php echo $this->hsc($pname)._NPPLUGIN_GOBACK_PTOP ?></a></p>
 
 <?php
-		echo '<h2>'._NPPART_EDIT_TITLE.' : '.htmlspecialchars($pname)."</h2>\n";
+		echo '<h2>'._NPPART_EDIT_TITLE.' : '.$this->hsc($pname)."</h2>\n";
 		if ($msg) echo "<p>"._MESSAGE.": $msg</p>\n\n";
 ?>
 <form method="post" action="<?php echo $this->url ?>index.php">
@@ -766,8 +766,8 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 				foreach ($bnames as $k => $v) {
 ?>
 			</tr><tr>
-				<td><?php echo htmlspecialchars($v) ?></td>
-				<td id="td<?php echo $cnt ?>"><textarea name="<?php echo 'bbody['.$k.']' ?>" rows="<?php echo $this->brows ?>" cols="<?php echo $this->bcols ?>" id="textarea<?php echo $cnt ?>" tabindex="30"><?php echo htmlspecialchars($bbodys[$k]) ?></textarea></td>
+				<td><?php echo $this->hsc($v) ?></td>
+				<td id="td<?php echo $cnt ?>"><textarea name="<?php echo 'bbody['.$k.']' ?>" rows="<?php echo $this->brows ?>" cols="<?php echo $this->bcols ?>" id="textarea<?php echo $cnt ?>" tabindex="30"><?php echo $this->hsc($bbodys[$k]) ?></textarea></td>
 <?php
 					$cnt ++;
 				}
@@ -804,7 +804,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 		$body = postVar('body');
 
 		if ($context != 'blog') {
-			$this->error('Wrong field: '.htmlspecialchars($context));
+			$this->error('Wrong field: '.$this->hsc($context));
 		} elseif (!$refid) {
 			$this->error('ID is missing ...');
 		} elseif (!$tableid) {
@@ -828,7 +828,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 		$cbodys = $this->requestEx('cbody');
 		
 		if ($context != 'category') {
-			$this->error('Wrong field: '.htmlspecialchars($context));
+			$this->error('Wrong field: '.$this->hsc($context));
 		} elseif (!$tableid) {
 			$this->error('parts is missing ...');
 		}
@@ -851,7 +851,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 		$bbodys = $this->requestEx('bbody');
 		
 		if ($context != 'blog') {
-			$this->error('Wrong field: '.htmlspecialchars($context));
+			$this->error('Wrong field: '.$this->hsc($context));
 		} elseif (!$tableid) {
 			$this->error('parts is missing ...');
 		}
@@ -886,7 +886,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 			if ($return) {
 				return 'MySQL Error.';
 			} else {
-				$this->error(htmlspecialchars(mysql_error()));
+				$this->error($this->hsc(sql_error()));
 			}
 		}
 	}
@@ -904,7 +904,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 		}
 		$fieldtype = postVar('fieldtype');
 		if ($fieldtype != "skin" && $fieldtype != "global") {
-			$this->error('Wrong type: '.htmlspecialchars($fieldtype));
+			$this->error('Wrong type: '.$this->hsc($fieldtype));
 		}
 
 		$name = postVar('title');
@@ -946,7 +946,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 			$context = postVar('context');
 			$body = postVar('body');
 			if ($context != 'skin' && $context != 'global') {
-				$this->error('Wrong field: '.htmlspecialchars($context));
+				$this->error('Wrong field: '.$this->hsc($context));
 			}
 			
 			$this->tmanager->updateTemplate($nowid,$skin);
@@ -968,7 +968,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 		}
 		$fieldtype = postVar('fieldtype');
 		if ($fieldtype != "blog" && $fieldtype != "blogcat") {
-			$this->error('Wrong type: '.htmlspecialchars($fieldtype));
+			$this->error('Wrong type: '.$this->hsc($fieldtype));
 		}
 		
 		$name = postVar('title');
@@ -1054,7 +1054,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 		
 		$fieldtype = $this->tmanager->getDataFromID("fieldtype",$tableid);
 		if ($fieldtype != "skin" && $fieldtype != "global") {
-			$this->error('Wrong type: '.htmlspecialchars($fieldtype));
+			$this->error('Wrong type: '.$this->hsc($fieldtype));
 		}
 		
 		$basename = $this->tmanager->getNameFromID($tableid);
