@@ -37,14 +37,8 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 	function getURL()  		{ return 'http://japan.nucleuscms.org/wiki/plugins:extraskinjp'; }
 	function getVersion() 	{ return '0.4.8.b1'; }
 	function getDescription() { return ''._LANG_NP_EXTRASKINJP10.'';	}
-
-	function supportsFeature($what) {
-		switch($what)
-		{ case 'SqlTablePrefix':
-				return 1;
-			default:
-				return 0; }
-	}
+	function supportsFeature($feature)	{ return in_array ($feature, array ('SqlTablePrefix', 'SqlApi'));}
+	function getMinNucleusVersion()	{ return 350; }
 
 	function install() {
 	
@@ -85,15 +79,15 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 		) ENGINE=MyISAM");
 		
 		$check_column = sql_query("SELECT * FROM {$tbl_plug_extraskin_jp}");
-		for ($i=0; $i<mysql_num_fields($check_column); $i++) {
-			if ($meta = mysql_fetch_field($check_column)) {
+		for ($i=0; $i<sql_num_fields($check_column); $i++) {
+			if ($meta = sql_fetch_field($check_column)) {
 				$names[] = $meta->name;
 			}
 		}
 		if (in_array("skin",$names)) {
-			while ($o = mysql_fetch_object($check_column)) {
+			while ($o = sql_fetch_object($check_column)) {
 				$context = ($o->pageflg) ? "skin" : "global";
-				$skin = mysql_real_escape_string($o->skin);
+				$skin = sql_real_escape_string($o->skin);
 				$query = "INSERT INTO {$tbl_plug_extraskin_jp_data} (tableid, context, refid, body) VALUES ('{$o->tableid}', '{$context}', 0, '{$skin}')";
 				sql_query($query);
 			}
@@ -166,16 +160,16 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 	}
 
 	function event_PostDeleteBlog($data) {
-		$res = mysql_query("DELETE FROM ". sql_table("plug_extraskin_jp_data") ." WHERE refid=".intval($data['blogid'])." and context='blog'");
+		$res = sql_query("DELETE FROM ". sql_table("plug_extraskin_jp_data") ." WHERE refid=".intval($data['blogid'])." and context='blog'");
 		if(!$res) {
-			ACTIONLOG::add(ERROR, 'NP_ExtraSkinJP : '.mysql_error());
+			ACTIONLOG::add(ERROR, 'NP_ExtraSkinJP : '.sql_error());
 		}
 	}
 	
 	function event_PostDeleteCategory($data) {
-		$res = mysql_query("DELETE FROM ". sql_table("plug_extraskin_jp_data") ." WHERE refid=".intval($data['catid'])." and context='category'");
+		$res = sql_query("DELETE FROM ". sql_table("plug_extraskin_jp_data") ." WHERE refid=".intval($data['catid'])." and context='category'");
 		if(!$res) {
-			ACTIONLOG::add(ERROR, 'NP_ExtraSkinJP : '.mysql_error());
+			ACTIONLOG::add(ERROR, 'NP_ExtraSkinJP : '.sql_error());
 		}
 	}
 	
@@ -208,9 +202,9 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 		if (!$tablename) return;
 		
 		if ($mode != 'include') {
-			$res=sql_query("SELECT * FROM ".sql_table('plug_extraskin_jp')." WHERE title='".mysql_real_escape_string($tablename)."'");
-			if (!$res || !mysql_num_rows($res)) return;
-			$o = mysql_fetch_object($res);
+			$res=sql_query("SELECT * FROM ".sql_table('plug_extraskin_jp')." WHERE title='".sql_real_escape_string($tablename)."'");
+			if (!$res || !sql_num_rows($res)) return;
+			$o = sql_fetch_object($res);
 			$fieldtype = $o->fieldtype;
 		} else {
 			$fieldtype = "global";
@@ -307,7 +301,7 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 									break;
 								case 'category':
 									if ($o->fieldtype == "blogcat") {
-										$v = quickQuery('SELECT catid as result FROM '.sql_table('category').' WHERE cname="'.mysql_real_escape_string($v).'"');
+										$v = quickQuery('SELECT catid as result FROM '.sql_table('category').' WHERE cname="'.sql_real_escape_string($v).'"');
 									}
 									break;
 							}
@@ -340,7 +334,7 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 				if (!$all) $where .= ' and ';
 				$where .= 'tableid='.$o->tableid;
 				
-				$query = 'SELECT body FROM '.sql_table('plug_extraskin_jp_data').' WHERE '.$where.' and context="'.mysql_real_escape_string($mode).'"';
+				$query = 'SELECT body FROM '.sql_table('plug_extraskin_jp_data').' WHERE '.$where.' and context="'.sql_real_escape_string($mode).'"';
 				if ($all) {
 					$query .= ' ORDER BY refid '.$sort;
 				} elseif (count($refids) > 1) {
@@ -349,7 +343,7 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 
 				$res = sql_query($query);
 		
-				while ($body = mysql_fetch_row($res)) {
+				while ($body = sql_fetch_row($res)) {
 					$this->doParse($body[0],$skinType);
 				}
 		
@@ -411,9 +405,9 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 		global $manager, $CONF, $blog, $member, $memberinfo, $maxresults;
 		
 		$url = rawurldecode($requests[0]);
-		$url = mysql_real_escape_string(stripslashes($url));
-		$r = mysql_query('SELECT e.*, d.body as skin FROM '.sql_table('plug_extraskin_jp').' as e, '.sql_table('plug_extraskin_jp_data').' as d WHERE url="'.$url.'" and e.tableid=d.tableid and d.context="skin" and d.refid=0');
-		if ($r) $o = mysql_fetch_object($r);
+		$url = sql_real_escape_string(stripslashes($url));
+		$r = sql_query('SELECT e.*, d.body as skin FROM '.sql_table('plug_extraskin_jp').' as e, '.sql_table('plug_extraskin_jp_data').' as d WHERE url="'.$url.'" and e.tableid=d.tableid and d.context="skin" and d.refid=0');
+		if ($r) $o = sql_fetch_object($r);
 	 
 		if (!$o) doError('No such page exists.');
 		
@@ -436,7 +430,7 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 			
 				$q = 'SELECT itime, iblog FROM '.sql_table('item').' WHERE inumber=' . intval($itemid);
 				$res = sql_query($q);
-				$obj = mysql_fetch_object($res);
+				$obj = sql_fetch_object($res);
 			
 				$blogid = $obj->iblog;
 				$timestamp = strtotime($obj->itime);
@@ -448,7 +442,7 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 				$q = 'SELECT inumber, ititle FROM '.sql_table('item').' WHERE itime<' . mysqldate($timestamp) . ' and idraft=0 and iblog=' . $blogid . $catextra . ' ORDER BY itime DESC LIMIT 1';
 				$res = sql_query($q);
 
-				$obj = mysql_fetch_object($res);
+				$obj = sql_fetch_object($res);
 				if ($obj) {
 					$itemidprev = $obj->inumber;
 					$itemtitleprev = $obj->ititle;
@@ -458,7 +452,7 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 				$q = 'SELECT inumber, ititle FROM '.sql_table('item').' WHERE itime>' . mysqldate($timestamp) . ' and itime <= ' . mysqldate(time()) . ' and idraft=0 and iblog=' . $blogid . $catextra . ' ORDER BY itime ASC LIMIT 1';
 				$res = sql_query($q);
 
-				$obj = mysql_fetch_object($res);
+				$obj = sql_fetch_object($res);
 				if ($obj) {
 					$itemidnext = $obj->inumber;
 					$itemtitlenext = $obj->ititle;

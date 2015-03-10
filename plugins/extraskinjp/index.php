@@ -240,11 +240,11 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 					$res = sql_query("SELECT refid, context FROM ".$this->data_table." WHERE tableid=".$pdata['tableid']." and context<>'skin' and context<>'global' ORDER BY FIELD(context,'blog','category'), refid");
 					$b_array = array();
 					$c_array = array();
-					while ($o = mysql_fetch_object($res)) {
+					while ($o = sql_fetch_object($res)) {
 						if ($o->context == 'blog') {
 							$b_array[] = $o->refid;
 							$cres = sql_query('SELECT catid FROM '.sql_table('category').' WHERE cblog='.$o->refid);
-							while ($cat = mysql_fetch_row($cres)) {
+							while ($cat = sql_fetch_row($cres)) {
 								$c_array[] = $cat[0];
 							}
 						} else {
@@ -253,7 +253,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 								if ($bid) {
 									$b_array[] = $bid;
 									$cres = sql_query('SELECT catid FROM '.sql_table('category').' WHERE cblog='.$o->refid);
-									while ($cat = mysql_fetch_row($cres)) {
+									while ($cat = sql_fetch_row($cres)) {
 										$c_array[] = $cat[0];
 									}
 								}
@@ -281,7 +281,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 							echo ' [ <a href="'.$this->hsc($manager->addTicketToUrl($this->url.'index.php?action=editallbfield&tableid='.$pdata['tableid'])).'">'._NPEDIT_ALLFIELD.'</a> ]'."\n";
 						}
 						echo "				<ul style=\"margin-top: 0.5em\">\n";
-						while ($o = mysql_fetch_object($res)) {
+						while ($o = sql_fetch_object($res)) {
 	?>
 						<li><a href="<?php echo $this->hsc($manager->addTicketToUrl($this->url.'index.php?action=editfield&refid='.$o->bnumber)); ?>&amp;tableid=<?php echo $pdata['tableid'] ?>"><?php echo $this->hsc($o->bname) ?></a></li>
 	<?php
@@ -523,7 +523,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 	
 			$query = 'SELECT bnumber, bname FROM '.sql_table('blog').' ORDER BY bnumber';
 			$res = sql_query($query);
-			while ($blogs = mysql_fetch_assoc($res)) {
+			while ($blogs = sql_fetch_assoc($res)) {
 ?>
 		<tr>
 			<td><?php echo $this->hsc($blogs['bname']) ?></td>
@@ -667,14 +667,14 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 			<th colspan="2"><?php echo _NPCAT_TITLE?></th>
 <?php
 			$res = sql_query("SELECT catid, cname FROM ".sql_table('category')." WHERE cblog=$refid");
-			while ($o = mysql_fetch_object($res)) {
+			while ($o = sql_fetch_object($res)) {
 				$catids[] = $o->catid;
 				$cnames[$o->catid] = $o->cname;
 			}
 			if (isset($catids)) {
 				$cres = sql_query("SELECT refid, body FROM ".$this->data_table." WHERE context='category' and tableid=$tableid and refid in (".implode(",",$catids).")");
 				$cbodys = array();
-				while ($c = mysql_fetch_object($cres)) {
+				while ($c = sql_fetch_object($cres)) {
 					$cbodys[$c->refid] = $c->body;
 				}
 				$cnt = 2;
@@ -753,13 +753,13 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 			<th colspan="2"><?php echo _NPBLOG_TITLE?></th>
 <?php
 			$res = sql_query("SELECT bnumber, bname FROM ".sql_table('blog'));
-			while ($o = mysql_fetch_object($res)) {
+			while ($o = sql_fetch_object($res)) {
 				$bnames[$o->bnumber] = $o->bname;
 			}
 			if (isset($bnames)) {
 				$bres = sql_query("SELECT refid, body FROM ".$this->data_table." WHERE context='blog' and tableid=$tableid");
 				$bbodys = array();
-				while ($b = mysql_fetch_object($bres)) {
+				while ($b = sql_fetch_object($bres)) {
 					$bbodys[$b->refid] = $b->body;
 				}
 				$cnt = 1;
@@ -868,17 +868,17 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 
 		if ($context == "skin" || $context == "global") $refid = 0;
 		
-		$checkrow = mysql_query("SELECT * FROM ". $this->data_table ." WHERE refid=$refid and context='$context' and tableid=$tableid");
+		$checkrow = sql_query("SELECT * FROM ". $this->data_table ." WHERE refid=$refid and context='$context' and tableid=$tableid");
 	
 		if (trim($body)) {
-			if ($checkrow && mysql_num_rows($checkrow) > 0) {
-				$res = mysql_query("UPDATE ". $this->data_table ." SET body='".mysql_real_escape_string($body)."' WHERE refid=$refid and context='$context' and tableid=$tableid");
+			if ($checkrow && sql_num_rows($checkrow) > 0) {
+				$res = sql_query("UPDATE ". $this->data_table ." SET body='".sql_real_escape_string($body)."' WHERE refid=$refid and context='$context' and tableid=$tableid");
 			} else {
-				$res = mysql_query("INSERT INTO ". $this->data_table ." SET refid=$refid, context='$context', body='".mysql_real_escape_string($body)."', tableid=$tableid");
+				$res = sql_query("INSERT INTO ". $this->data_table ." SET refid=$refid, context='$context', body='".sql_real_escape_string($body)."', tableid=$tableid");
 			}
 		} else {
-			if ($checkrow && mysql_num_rows($checkrow) > 0) {
-				$res = mysql_query("DELETE FROM ". $this->data_table ." WHERE refid=$refid and context='$context' and tableid=$tableid");
+			if ($checkrow && sql_num_rows($checkrow) > 0) {
+				$res = sql_query("DELETE FROM ". $this->data_table ." WHERE refid=$refid and context='$context' and tableid=$tableid");
 			}
 		}
 		
@@ -933,7 +933,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 			$skin['tableid'] = $nowid;
 			$skin['title'] = $newname;
 			$res = sql_query("SELECT * FROM ".$this->data_table." WHERE tableid=".$oldid);
-			$o = mysql_fetch_object($res);
+			$o = sql_fetch_object($res);
 			
 			$this->tmanager->updateTemplate($nowid,$skin);
 			$this->doUpdateField(0, $o->context, $nowid, $o->body);
@@ -1118,8 +1118,8 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 		
 		$this->tmanager->deleteTemplate($tableid);
 		
-		$checkrow = mysql_query("SELECT * FROM ". $this->data_table ." WHERE tableid=".$tableid);
-		if ($checkrow && mysql_num_rows($checkrow) > 0) {
+		$checkrow = sql_query("SELECT * FROM ". $this->data_table ." WHERE tableid=".$tableid);
+		if ($checkrow && sql_num_rows($checkrow) > 0) {
 			sql_query ("DELETE FROM ".$this->data_table." WHERE tableid=".$tableid);
 		}
 		
