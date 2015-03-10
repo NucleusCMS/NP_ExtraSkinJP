@@ -575,14 +575,12 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 			$contenttype = 'text/html';
 		}
 		if (function_exists("sendContentType")) {
-			$manager->notify(
-				'PreSendContentType',
-				array(
+			$params = array(
 					'contentType' => &$contenttype,
-					'charset' => &$charset,
-					'pageType' => 'skin'
-				)
-			);
+					'charset'     => &$charset,
+					'pageType'    => 'skin'
+				);
+			$manager->notify('PreSendContentType',$params);
 		}
 		if (!headers_sent()) 
 			header('Content-Type: ' . $contenttype . '; charset=' . $charset);
@@ -592,14 +590,16 @@ class NP_ExtraSkinJP extends NucleusPlugin {
 		$skinType = ($o->skintype == 'same') ? $o->skinvartype : 'pageparser';
 		
 		if (!isset($skin)) $skin = new SKIN($CONF['BaseSkin']);
-		$manager->notify('PreSkinParse',array('skin' => &$skin, 'type' => $skinType));
+		$params = array('skin' => &$skin, 'type' => $skinType);
+		$manager->notify('PreSkinParse',$params);
 
 		$handler = new ACTIONS($skinType);
 		$parser = new PARSER(SKIN::getAllowedActionsForType($o->skinvartype), $handler);
 		$handler->setParser($parser);
 		$parser->parse($o->skin); 
 
-		$manager->notify('PostSkinParse',array('skin' => &$skin, 'type' => $skinType));
+		$params = array('skin' => &$skin, 'type' => $skinType);
+		$manager->notify('PostSkinParse',$params);
 	}
 
 }
