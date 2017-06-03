@@ -221,7 +221,7 @@ class PLUG_ADMIN {
 
 class PLUG_TEMPLATE_MANAGER {
 	
-	function PLUG_TEMPLATE_MANAGER($table,$primarykey,$namecolumn) {
+	function __construct($table,$primarykey,$namecolumn) {
 		$this->table = $table;
 		$this->idkey = $primarykey;
 		$this->namekey = $namecolumn;
