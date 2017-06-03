@@ -1127,7 +1127,7 @@ class ExtraSkin_ADMIN extends PLUG_ADMIN {
 	}
 	
 	function hsc($str) {
-		return htmlspecialchars($str,ENT_QUOTES,_CHARSET);
+		return hsc($str,ENT_QUOTES,_CHARSET);
 	}
 } // ExtraSkin_ADMIN end
 

@@ -97,7 +97,7 @@ class PLUG_ADMIN {
 		$res = sql_query("SELECT bnumber, bname FROM {$tbl_blog} ORDER BY bnumber");
 		
 		while ($data = sql_fetch_assoc($res)) {
-			$data['bname'] = htmlspecialchars(shorten($data['bname'],16,'..'));
+			$data['bname'] = hsc(shorten($data['bname'],16,'..'));
 			
 			echo '<span style="white-space:nowrap"><input type="checkbox" name="'.$name.'[]" value="'.$data['bnumber'].'"';
 			
@@ -122,7 +122,7 @@ class PLUG_ADMIN {
 		$res = sql_query("SELECT catid, cname FROM {$tbl_category} WHERE cblog='{$blogid}' ORDER BY catid");
 		
 		while ($data = sql_fetch_assoc($res)) {
-			$data['cname'] = htmlspecialchars(shorten($data['cname'],16,'..'));
+			$data['cname'] = hsc(shorten($data['cname'],16,'..'));
 			
 			echo '<span style="white-space:nowrap"><input type="checkbox" name="'.$name.'[]" value="'.$data['catid'].'"';
 			
@@ -180,7 +180,7 @@ class PLUG_ADMIN {
 
 		while ($oBlog = sql_fetch_object($blogs)) {
 			if ($multipleBlogs) {
-				echo '<optgroup label="',htmlspecialchars($oBlog->bname),'">';
+				echo '<optgroup label="',hsc($oBlog->bname),'">';
 			}
 		
 			// 2. for each category in that blog
@@ -190,7 +190,7 @@ class PLUG_ADMIN {
 					$selectText = ' selected="selected" ';
 				else
 					$selectText = '';
-				echo '<option value="',$oCat->catid,'" ', $selectText,'>',htmlspecialchars($oCat->cname),'</option>';
+				echo '<option value="',$oCat->catid,'" ', $selectText,'>',hsc($oCat->cname),'</option>';
 			}
 
 			if ($multipleBlogs) {
@@ -212,7 +212,7 @@ class PLUG_ADMIN {
 	?>
 		</tr><tr>	
 			<td><?php echo $description ?> <?php if ($help) $this->help($help); ?></td>
-			<td><textarea name="<?php echo $name?>" tabindex="<?php echo $tabindex?>" cols="50" rows="<?php echo $big ? '10' : '5'; ?>"><?php echo  htmlspecialchars($template[$name]); ?></textarea></td>
+			<td><textarea name="<?php echo $name?>" tabindex="<?php echo $tabindex?>" cols="50" rows="<?php echo $big ? '10' : '5'; ?>"><?php echo  hsc($template[$name]); ?></textarea></td>
 	<?php
 	}
 
